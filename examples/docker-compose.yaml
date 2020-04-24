@@ -1,0 +1,20 @@
+version: "3"
+services:
+  cache:
+    image: cash
+    restart: always
+    networks:
+      - webappnetwork
+  api:
+    image: webapp-api
+    build: ./api/
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./api:/home/node/app
+    networks:
+      - webappnetwork
+networks:
+  webappnetwork:
+    driver: bridge
