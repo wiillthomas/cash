@@ -45,7 +45,7 @@ func main() {
 
 		if value == "" {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("400 - Must supply a value in query string"))
+			w.Write([]byte("Must supply a value in query string"))
 			return
 		}
 
@@ -69,6 +69,12 @@ func main() {
 	http.HandleFunc("/read", func(w http.ResponseWriter, r *http.Request) {
 
 		key := r.URL.Query().Get("key")
+
+		if key == "" {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("Must supply a value in query string"))
+			return
+		}
 
 		value, err := c.ReadItem(key)
 
@@ -97,7 +103,7 @@ func main() {
 	http.HandleFunc("/purge", func(w http.ResponseWriter, r *http.Request) {
 		c.Purge()
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("Destroyed"))
+		w.Write([]byte("Purged"))
 	})
 
 	// Handle Health Check
@@ -109,8 +115,3 @@ func main() {
 	fmt.Println("CASH IS UP")
 	http.ListenAndServe(":"+strconv.Itoa(*defaultPort), nil)
 }
-
-// Sharding
-// Write shard copy after n deletes
-// Allow for command line
-// Write tests
