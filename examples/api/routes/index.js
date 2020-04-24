@@ -36,6 +36,35 @@ router.get('/addBulk/:requests', function(req, res, next) {
     }, interval  )
   }
 });
+
+
+router.get('/flood/:requests', function(req, res, next) {
+  const { requests=100 } = req.params;
+  
+  const times = []
+
+  for ( let i = 0; i < requests; i += 1 ) {
+
+    let end
+    setTimeout(() => {
+      let start = new Date()
+      axios.get(`http://cache:9192/create?value=testval`)
+        .then((response) => {
+          end = new Date() 
+          total = end.getTime() - start.getTime()
+          times.push(`${response.data} ${total}`)
+          console.log(total)
+          gotRequests += 1
+          if ( gotRequests == requests ) {
+            res.status(200).send(times)
+          }
+        })
+        .catch((err) => {
+          // console.log(err)
+        })
+    }, 10  )
+  }
+});
  
 /* Bulk add to cache */
 router.get('/add/:value', function(req, res, next) {

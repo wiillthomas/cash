@@ -41,7 +41,6 @@ func main() {
 	http.HandleFunc("/create", func(w http.ResponseWriter, r *http.Request) {
 
 		startTime := time.Now()
-
 		value := r.URL.Query().Get("value")
 
 		if value == "" {
@@ -62,11 +61,8 @@ func main() {
 
 		c.CreateItem(hashedKey, value, expiry)
 
-		fmt.Println(time.Since(startTime))
-
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(hashedKey))
-
 	})
 
 	// Handle Read
