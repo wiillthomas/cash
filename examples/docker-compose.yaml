@@ -13,6 +13,7 @@ services:
       - "3000:3000"
     volumes:
       - ./api:/home/node/app
+      - /home/node/app/node_modules
     networks:
       - webappnetwork
 networks:

@@ -31,7 +31,7 @@ func main() {
 	c := cache.New(*defaultCleanup)
 
 	go c.Cleanup()
-	go c.DumpToTerminal()
+	// go c.DumpToTerminal()
 
 	// if verbose != "" {
 	// 	go c.DumpToTerminal()
@@ -40,7 +40,7 @@ func main() {
 	// Handle Create
 	http.HandleFunc("/create", func(w http.ResponseWriter, r *http.Request) {
 
-		time := time.Now()
+		startTime := time.Now()
 
 		value := r.URL.Query().Get("value")
 
@@ -57,10 +57,12 @@ func main() {
 		}
 
 		hash := md5.New()
-		hash.Write([]byte(value + time.String()))
+		hash.Write([]byte(value + startTime.String()))
 		hashedKey := hex.EncodeToString(hash.Sum(nil))
 
 		c.CreateItem(hashedKey, value, expiry)
+
+		fmt.Println(time.Since(startTime))
 
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(hashedKey))
@@ -112,5 +114,7 @@ func main() {
 	http.ListenAndServe(":"+strconv.Itoa(*defaultPort), nil)
 }
 
+// Sharding
+// Write shard copy after n deletes
 // Allow for command line
 // Write tests

@@ -4,35 +4,36 @@ var router = express.Router();
 const axios = require("axios")
 
 /* Add to cache */
-router.get('/addBulk/:value', function(req, res, next) {
-  const { value } = req.params;
+router.get('/addBulk/:requests', function(req, res, next) {
+  const { requests=100 } = req.params;
   
   const times = []
 
-  const num = 1000
+
+  const interval = requests / 1000
 
   let gotRequests = 0
 
-  for ( let i = 0; i < num; i += 1 ) {
+  for ( let i = 0; i < requests; i += 1 ) {
 
     let end
     setTimeout(() => {
       let start = new Date()
-      axios.get(`http://cache:9192/create?value=${ Math.random() }`)
+      axios.get(`http://cache:9192/create?value=testval`)
         .then((response) => {
           end = new Date() 
           total = end.getTime() - start.getTime()
           times.push(`${response.data} ${total}`)
           console.log(total)
           gotRequests += 1
-          if ( gotRequests == num ) {
+          if ( gotRequests == requests ) {
             res.status(200).send(times)
           }
         })
         .catch((err) => {
           // console.log(err)
         })
-    }, i * 2 )
+    }, interval  )
   }
 });
  
