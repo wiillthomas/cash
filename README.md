@@ -1,7 +1,7 @@
 # Cash
 
 ## What is Cash?
-![Cash-Logo](https://cdn.pixabay.com/photo/2013/07/13/13/59/savings-box-161876_1280.png)
+<img src="https://cdn.pixabay.com/photo/2013/07/13/13/59/savings-box-161876_1280.png" alt="cash" width="300px" height="300px">
 
 ## Cash is an in-memory cache for Docker containers, written in Go & designed to be stupidly easy to set up and use.
 
