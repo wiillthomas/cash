@@ -4,38 +4,64 @@ import (
 	cache "cash/lib"
 	"crypto/md5"
 	"encoding/hex"
-	"flag"
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 )
 
+func parseEnvs() (int, int, int, string) {
+	expiryEnv := os.Getenv("EXPIRY")
+	cleanupEnv := os.Getenv("CLEANUP")
+	portEnv := os.Getenv("PORT")
+	verboseEnv := os.Getenv("VERBOSE")
+
+	var defaultExpiry int
+	var defaultCleanup int
+	var port int
+
+	if expiryEnv != "" {
+		defaultExpiry = convStrToInt(expiryEnv, "Expiry")
+	} else {
+		defaultExpiry = 20
+	}
+
+	if cleanupEnv != "" {
+		defaultCleanup = convStrToInt(cleanupEnv, "Cleanup")
+	} else {
+		defaultCleanup = 10
+	}
+
+	if portEnv != "" {
+		port = convStrToInt(portEnv, "Port")
+	} else {
+		port = 9192
+	}
+
+	return defaultExpiry, defaultCleanup, port, verboseEnv
+}
+
+func convStrToInt(value, name string) int {
+	output, err := strconv.Atoi(value)
+	if err != nil {
+		log.Fatal(name + "Must Be Int")
+	}
+	return output
+}
+
 func main() {
-	defaultExpiry := flag.Int("expiry", 20, "Default expiration time of items in cache.")
-	defaultCleanup := flag.Int("cleanup", 10, "Time between cleanups.")
-	defaultPort := flag.Int("port", 9192, "The port the service runs on.")
-	// verbose := flag.Bool("verbose", false, "Verbose mode to output cache to terminal every 2 minutes.")
 
-	flag.Parse()
+	defaultExpiry, defaultCleanup, port, verbose := parseEnvs()
 
-	// defaultExpiry := os.Getenv("EXPIRY")
-	// defaultCleanup := os.Getenv("CLEANUP")
-	// defaultPort := os.Getenv("PORT")
-	// verbose := os.Getenv("VERBOSE")
-
-	// if defaultCleanup != "" {
-	// 	log.Fatal("EXPIRY must be an to an int")
-	// }
-
-	c := cache.New(*defaultCleanup)
+	c := cache.New(defaultCleanup)
 
 	go c.Cleanup()
-	// go c.DumpToTerminal()
 
-	// if verbose != "" {
-	// 	go c.DumpToTerminal()
-	// }
+	if verbose != "" {
+		go c.DumpToTerminal()
+	}
 
 	// Handle Create
 	http.HandleFunc("/create", func(w http.ResponseWriter, r *http.Request) {
@@ -52,7 +78,7 @@ func main() {
 		expiry, err := strconv.Atoi(r.URL.Query().Get("expiry"))
 
 		if err != nil || expiry == 0 {
-			expiry = *defaultExpiry
+			expiry = defaultExpiry
 		}
 
 		hash := md5.New()
@@ -113,5 +139,5 @@ func main() {
 	})
 
 	fmt.Println("Cash is up")
-	http.ListenAndServe(":"+strconv.Itoa(*defaultPort), nil)
+	http.ListenAndServe(":"+strconv.Itoa(port), nil)
 }

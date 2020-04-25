@@ -5,6 +5,8 @@ services:
     restart: always
     networks:
       - webappnetwork
+    environment: 
+      - EXPIRY=1000
   api:
     image: webapp-api
     build: ./api/
