@@ -1,10 +1,7 @@
-<style>
-
-</style>
 # Cash
 
 ## What is Cash?
-![Cash-Logo](https://cdn.clipart.email/6d189a101415d9170937b3253c31fc24_piggy-bank-transparent-background-money-clipart_900-600.jpeg)
+![Cash-Logo](https://cdn.pixabay.com/photo/2013/07/13/13/59/savings-box-161876_1280.png)
 
 ## Cash is an in-memory cache for Docker containers, written in Go & designed to be stupidly easy to set up and use.
 
@@ -22,9 +19,6 @@
 - Message brokering
 - LRU replacement
 
-<br />
-<br />
-
 ---
 
 ## Installation
@@ -41,8 +35,6 @@ verbose | Bool | false | Outputs any shards that have values every 2 seconds to 
 expiry | Int | 20 | Default time each item in cache takes to expire - in seconds.
 cleanup | Int | 10 | Interval at which the cleanup runs through the cache to find expired items - in seconds.
 port | Int | 9192 | Port through which the service is accessable to other containers.
-<br />
-<br />
 
 ---------
 
@@ -57,14 +49,9 @@ Url | Query Params | Method | Success Response | Failure Response | Sample Call
 /purge | | GET | (200): Purged | | `http://cache:9192/purge`
 /healthcheck | | GET | (200): OK | | `http://cache:9192/healthcheck `
 
-<br />
-<br />
 
 ---
 
 ## Examples
 
 An example of usage can be found in the 'examples' folder, run `docker-compose up`.
-
-<br />
-<br />
