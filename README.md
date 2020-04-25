@@ -1,5 +1,3 @@
-# Cash
-
 ## What is Cash?
 <img src="https://cdn.pixabay.com/photo/2013/07/13/13/59/savings-box-161876_1280.png" alt="cash" width="400px" height="auto">
 
@@ -13,7 +11,7 @@
 - Works over HTTP
 - Automatic sharding
 
-### Do you NOT need all those useful features that Redis provides like:
+### Do you NOT need all the useful features that Redis provides like:
 - Storing anything that isn’t a string
 - Backups/Restores
 - Message brokering
@@ -25,16 +23,16 @@
 
 #### **Cash is available as a docker image here.**
 
-Connection examples for `docker-compose` can be found in the examples folder.
+A connection example for `docker-compose` can be found in the examples folder.
 
 The following enviorment variables can be set for config:
 
 Env Variable | Accepts | Default | Description
 --- | --- | --- | ---
-verbose | Bool | false | Outputs any shards that have values every 2 seconds to the terminal.
-expiry | Int | 20 | Default time each item in cache takes to expire - in seconds.
-cleanup | Int | 10 | Interval at which the cleanup runs through the cache to find expired items - in seconds.
-port | Int | 9192 | Port through which the service is accessable to other containers.
+VERBOSE | Bool | false | Outputs any shards that have values every 2 seconds to the terminal.
+EXPIRY | Int | 20 | Default time each item in cache takes to expire - in seconds.
+CLEANUP | Int | 10 | Interval at which the cleanup runs through the cache to find expired items - in seconds.
+PORT | Int | 9192 | Port through which the service is accessable to other containers.
 
 ---------
 
@@ -44,7 +42,7 @@ port | Int | 9192 | Port through which the service is accessable to other contai
 Url | Query Params | Method | Success Response | Failure Response | Sample Call
 --- | --- | --- | --- | --- | ----
 /create | **Required:** `value`<br /> **Optional:** `expiry` | GET | (200): `key` | (400): Must supply a value in query string | `http://cache:9192/create?value=CacheThisValue&expiry=600`
-/read?key=`key` | **Required:** `key` | GET | (200): `value` | (204): Not Found <br /> <br />(400): Must supply a key in query string  | `http://cache:9192/read?key=e332a76c29654fcb7f6e6b31ced090c7`
+/read | **Required:** `key` | GET | (200): `value` | (204): Not Found <br /> <br />(400): Must supply a key in query string  | `http://cache:9192/read?key=e332a76c29654fcb7f6e6b31ced090c7`
 /destroy | **Required:** `key` |  GET | (200): Destroyed | None - if not found then it is considered destroyed | `http://cache:9192/destroy?key=332a76c29654fcb7f6e6b31ced090c7`
 /purge | | GET | (200): Purged | | `http://cache:9192/purge`
 /healthcheck | | GET | (200): OK | | `http://cache:9192/healthcheck `
