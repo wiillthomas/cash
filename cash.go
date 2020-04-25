@@ -72,7 +72,7 @@ func main() {
 
 		if key == "" {
 			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("Must supply a value in query string"))
+			w.Write([]byte("Must supply a key in query string"))
 			return
 		}
 
@@ -112,6 +112,6 @@ func main() {
 		w.Write([]byte("OK"))
 	})
 
-	fmt.Println("CASH IS UP")
+	fmt.Println("Cash is up")
 	http.ListenAndServe(":"+strconv.Itoa(*defaultPort), nil)
 }
