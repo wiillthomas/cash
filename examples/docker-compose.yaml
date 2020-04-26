@@ -7,6 +7,14 @@ services:
       - webappnetwork
     environment: 
       - EXPIRY=1000
+      - GODEBUG=madvdontneed=1
+  redis:
+    image: redis
+    restart: always
+    expose:
+      - 6379
+    networks:
+      - webappnetwork
   api:
     image: webapp-api
     build: ./api/

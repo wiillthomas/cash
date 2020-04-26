@@ -4,7 +4,7 @@
 ## Cash is an in-memory cache for Docker containers, written in Go & designed to be stupidly easy to set up and use.
 
 ### Are you looking for a key-value in memory caching solution for your networked containers that:
-- Is really fast at low/medium throughput
+- Automatically creates keys
 - Works out of the box with 0 config
 - Allows for custom expiration/cleanup times
 - Allows purging
@@ -53,3 +53,4 @@ Url | Query Params | Method | Success Response | Failure Response | Sample Call
 ## Examples
 
 An example of usage can be found in the 'examples' folder, run `docker-compose up`.
+

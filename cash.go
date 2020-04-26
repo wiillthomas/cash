@@ -138,6 +138,6 @@ func main() {
 		w.Write([]byte("OK"))
 	})
 
-	fmt.Println("Cash is up")
+	fmt.Println("💰 is up")
 	http.ListenAndServe(":"+strconv.Itoa(port), nil)
 }

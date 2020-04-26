@@ -1,9 +1,15 @@
 var express = require('express');
 var router = express.Router();
 
-const axios = require("axios")
+require("http").globalAgent.maxFreeSockets = 1000000
+require('http').globalAgent.maxSockets = 1000000
+const http = require("http")
 
-/* Bulk add to cache in 1s */
+console.log(require('http').globalAgent.maxSockets)
+
+const axios = require("axios")
+ 
+/* Benchmark Bulk add to cache in 1s */
 router.get('/addBulk/:requests', function(req, res, next) {
   const { requests=100 } = req.params;
   
@@ -18,15 +24,21 @@ router.get('/addBulk/:requests', function(req, res, next) {
     let end
     setTimeout(() => {
       let start = new Date()
-      axios.get(`http://cache:9192/create?value=testval`)
+      axios.get(`http://cache:9192/create?value=testval`, { httpAgent: new http.Agent({ keepAlive: true })})
         .then((response) => {
           end = new Date() 
           total = end.getTime() - start.getTime()
-          times.push(`${response.data} ${total}`)
+          times.push(total)
           console.log(total)
           gotRequests += 1
           if ( gotRequests == requests ) {
-            res.status(200).send(times)
+            let avgTime = 0;
+            for ( let i = 0; i < times.length; i ++ ) {
+                avgTime += times[i]
+            }
+            avgTime = avgTime / times.length
+            res.status(200).send(`time: ${times} 
+            avg: ${ avgTime}`)
           }
         })
         .catch((err) => {
@@ -52,6 +64,22 @@ router.get('/add/:value/:expiry', function(req, res, next) {
   .catch((err) => console.log(err))
 });
 
+
+/* Continuously add items to cache */
+router.get('/flood/', function(req, res, next) {
+  setInterval(() => { 
+    for ( let i = 0; i < 100 ; i += 1 ) {
+        setTimeout(() => {
+          axios.get(`http://cache:9192/create?value=testval`)
+            .then((response) => {
+            }) 
+            .catch((err) => {
+		console.log(err)
+            })
+        }, 10 )
+    }
+  }, 1000)
+});
 
 
 /* Read from cache */
